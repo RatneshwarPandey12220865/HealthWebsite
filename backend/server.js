@@ -50,6 +50,16 @@ const connectDB = async () => {
 
 connectDB();
 
+// Clean up duplicate null emails (run once)
+mongoose.connection.once('open', async () => {
+  try {
+    await mongoose.connection.db.collection('doctors').deleteMany({ email: null });
+    console.log('Cleaned up null email documents');
+  } catch (err) {
+    console.log('Cleanup not needed or already done');
+  }
+});
+
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/admin", require("./routes/admin"));
