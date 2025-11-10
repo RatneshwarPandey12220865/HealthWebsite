@@ -9,7 +9,7 @@ const app = express();
 // Enhanced Security Middleware
 app.use(
   cors({
-    origin: config.CLIENT_URL,
+    origin: health-website-two.vercel.app/,
     credentials: true,
   })
 );
