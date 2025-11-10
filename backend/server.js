@@ -9,8 +9,22 @@ const app = express();
 // Enhanced Security Middleware
 app.use(
   cors({
-    origin: config.CLIENT_URL,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://health-website-two.vercel.app",
+        "http://localhost:3000",
+        config.CLIENT_URL,
+      ].filter(Boolean);
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
