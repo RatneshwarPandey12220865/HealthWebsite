@@ -50,13 +50,23 @@ const connectDB = async () => {
 
 connectDB();
 
-// Clean up duplicate null emails (run once)
+// Clean up database issues (run once)
 mongoose.connection.once('open', async () => {
   try {
+    // Remove documents with null email
     await mongoose.connection.db.collection('doctors').deleteMany({ email: null });
-    console.log('Cleaned up null email documents');
+    
+    // Drop the email index if it exists
+    try {
+      await mongoose.connection.db.collection('doctors').dropIndex('email_1');
+      console.log('Dropped email index from doctors collection');
+    } catch (indexErr) {
+      console.log('Email index not found or already dropped');
+    }
+    
+    console.log('Database cleanup completed');
   } catch (err) {
-    console.log('Cleanup not needed or already done');
+    console.log('Cleanup error:', err.message);
   }
 });
 
