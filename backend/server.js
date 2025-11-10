@@ -7,7 +7,12 @@ const config = require("./config/config");
 const app = express();
 
 // Enhanced Security Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: config.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
